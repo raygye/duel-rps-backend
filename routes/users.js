@@ -26,15 +26,15 @@ router.route('/add').post((req, res) => {
       });
 });
 router.route('/login').post((req, res) => {
-    User.findOne({username: req.body.username, password: req.body.password})
-      .then(() => {
-          console.log(req.session);
-          req.session.username = req.body.username;
-          req.session.password = req.body.password;
-          res.json('User authenticated.');
-          console.log(req.session.username);
-      })
-      .catch(err => res.status(400).json('Error ' + err));
+    User.findOne({username: req.body.username, password: req.body.password}, (err, result) => {
+        if (err) throw err;
+        else if (result === null) {
+            res.json('No matching username/password combination');
+        }
+        else {
+            res.json('User authenticated.');
+        }
+    });
 });
 router.route('/delete').post((req, res) => {
   const delName = req.body.username;
