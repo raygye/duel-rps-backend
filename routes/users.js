@@ -9,11 +9,25 @@ router.get('/', function(req, res) {
 });
 router.route('/add').post((req, res) => {
   const username = req.body.username;
-  const password = req.body.password;
-  const img = req.body.img;
-  const newUser = new User({username, password, img});
-  newUser.save()
-      .then(() => res.json('User added.'))
+  User.find({username: username})
+      .then((found) => {
+        if (found.length > 0) {
+          console.log(found);
+          return res.status(400).json('Username already exists.');
+        }
+        else {
+          const password = req.body.password;
+          const img = req.body.img;
+          const newUser = new User({username, password, img});
+          newUser.save()
+              .then(() => res.json('User added.'))
+              .catch(err => res.status(400).json('Error ' + err));
+        }
+      });
+});
+router.route('/login').post((req, res) => {
+    User.findOne({username: req.body.username, password: req.body.password})
+      .then(() => res.json('User authenticated.'))
       .catch(err => res.status(400).json('Error ' + err));
 });
 router.route('/delete').post((req, res) => {
