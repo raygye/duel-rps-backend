@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 let User = require('../models/userSchema');
-/* GET users listing. */
+
 router.get('/', function(req, res) {
   User.find()
       .then(users => res.json(users))
@@ -27,7 +27,13 @@ router.route('/add').post((req, res) => {
 });
 router.route('/login').post((req, res) => {
     User.findOne({username: req.body.username, password: req.body.password})
-      .then(() => res.json('User authenticated.'))
+      .then(() => {
+          console.log(req.session);
+          req.session.username = req.body.username;
+          req.session.password = req.body.password;
+          res.json('User authenticated.');
+          console.log(req.session.username);
+      })
       .catch(err => res.status(400).json('Error ' + err));
 });
 router.route('/delete').post((req, res) => {
