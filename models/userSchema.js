@@ -21,11 +21,11 @@ const userSchema = new Schema({
     },
     wins: {
         type: Number,
-        value: 0
+        default: 0
     },
     games: {
         type: Number,
-        value: 0
+        default: 0
     }
 }, {
     timestamps: true,

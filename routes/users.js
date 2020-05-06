@@ -32,7 +32,12 @@ router.route('/login').post((req, res) => {
             res.json('No matching username/password combination');
         }
         else {
-            res.json('User authenticated.');
+            res.json({
+                authenticated: true,
+                img: result.img,
+                wins: result.wins,
+                games: result.games
+            });
         }
     });
 });
