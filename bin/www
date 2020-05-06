@@ -20,6 +20,7 @@ const connection = mongoose.connection;
 connection.once('open', () => {
   console.log('Connection to MongoDB established');
 });
+
 /**
  * Get port from environment and store in Express.
  */
@@ -32,7 +33,18 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
-
+const io = require('socket.io')(server);
+io.on('connection', (socket) => {
+  console.log('user connected');
+  socket.on('room', (room) => {
+    socket.join(room, () => {
+      console.log('joined ' + room);
+    })
+  });
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 /**
  * Listen on provided port, on all network interfaces.
  */
