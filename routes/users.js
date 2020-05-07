@@ -32,12 +32,30 @@ router.route('/login').post((req, res) => {
             res.json('No matching username/password combination');
         }
         else {
+            console.log(result);
             res.json({
                 authenticated: true,
                 img: result.img,
                 wins: result.wins,
                 games: result.games
             });
+        }
+    });
+});
+
+router.route('/update').post((req, res) => {
+    let increment = {};
+    let user = {username: req.body.username};
+    if (req.body.win) {
+        increment = {$inc: {wins: 1, games: 1}};
+    }
+    else {
+        increment = {$inc: {games: 1}};
+    }
+    User.updateOne(user, increment, (err, result) => {
+        if (err) throw err;
+        else {
+            res.json('updated');
         }
     });
 });
